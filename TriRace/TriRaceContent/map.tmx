@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="16" tileheight="16">
+ <objectgroup name="Tris" width="100" height="100">
+  <object x="70" y="154">
+   <polygon points="0,0 42,102 -12,170"/>
+  </object>
+  <object x="104" y="254">
+   <polygon points="0,0 26,54 -94,88"/>
+  </object>
+  <object x="68" y="324">
+   <polygon points="0,0 84,74 34,-24"/>
+  </object>
+  <object x="140" y="288">
+   <polygon points="0,0 6,176 -38,214"/>
+  </object>
+  <object x="140" y="246">
+   <polygon points="0,0 -14,118 -54,-128"/>
+  </object>
+  <object x="132" y="72">
+   <polygon points="0,0 -6,160 38,60"/>
+  </object>
+  <object x="154" y="156">
+   <polygon points="0,0 136,-38 -18,-58"/>
+  </object>
+  <object x="120" y="16">
+   <polygon points="0,0 180,10 68,38"/>
+  </object>
+  <object x="144" y="56">
+   <polygon points="0,0 96,-14 44,60"/>
+  </object>
+  <object x="164" y="110">
+   <polygon points="0,0 6,-82 -72,-24"/>
+  </object>
+  <object x="110" y="200">
+   <polygon points="0,0 48,-54 -22,-136"/>
+  </object>
+  <object x="228" y="456">
+   <polygon points="0,0 -4,-124 46,-38"/>
+  </object>
+  <object x="218" y="486">
+   <polygon points="0,0 26,-100 74,146"/>
+  </object>
+  <object x="280" y="386">
+   <polygon points="0,0 -34,98 2,180"/>
+  </object>
+  <object x="306" y="492">
+   <polygon points="0,0 -56,-172 14,-220"/>
+  </object>
+  <object x="260" y="286">
+   <polygon points="0,0 -38,82 20,136"/>
+  </object>
+  <object x="250" y="256">
+   <polygon points="0,0 -6,80 100,-16"/>
+  </object>
+  <object x="250" y="256">
+   <polygon points="0,0 54,-50 198,-64"/>
+  </object>
+  <object x="316" y="256">
+   <polygon points="0,0 86,-84 214,-32"/>
+  </object>
+  <object x="280" y="116">
+   <polygon points="0,0 168,-58 -108,-10"/>
+  </object>
+  <object x="210" y="50">
+   <polygon points="0,0 114,38 -20,60"/>
+  </object>
+  <object x="232" y="16">
+   <polygon points="0,0 152,42 24,80"/>
+  </object>
+  <object x="278" y="12">
+   <polygon points="0,0 180,12 80,60"/>
+  </object>
+  <object x="442" y="52">
+   <polygon points="0,0 92,26 12,-40"/>
+  </object>
+  <object x="376" y="60">
+   <polygon points="0,0 88,-8 46,-74"/>
+  </object>
+  <object x="76" y="314">
+   <polygon points="0,0 -56,340 48,42"/>
+  </object>
+  <object x="112" y="532">
+   <polygon points="0,0 -2,-180 -68,52"/>
+  </object>
+  <object x="106" y="600">
+   <polygon points="0,0 36,-158 -58,-52"/>
+  </object>
+  <object x="282" y="608">
+   <polygon points="0,0 2,-218 58,62"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="Spawn" width="100" height="100">
+  <object x="168" y="362" width="30" height="30"/>
+ </objectgroup>
+</map>
