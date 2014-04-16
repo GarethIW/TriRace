@@ -14,12 +14,12 @@ namespace TiledLib
 		/// <summary>
 		/// Gets the objects on the current layer.
 		/// </summary>
-		public ReadOnlyCollection<MapObject> Objects { get; private set; }
+		public List<MapObject> Objects { get; private set; }
 
 		internal MapObjectLayer(string name, int width, int height, bool visible, float opacity, PropertyCollection properties, IList<MapObject> objects)
 			: base(name, width, height, visible, opacity, properties)
 		{
-			Objects = new ReadOnlyCollection<MapObject>(objects);
+			Objects = new List<MapObject>(objects);
 			foreach (var o in objects)
 			{
                 string oname = o.Name;

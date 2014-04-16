@@ -32,7 +32,7 @@ namespace TiledLib
 
         public List<Point> PolyPoints { get; private set; } 
 
-		internal MapObject(string name, string type, Rectangle location, List<Point> linePoints, List<Point> polyPoints, PropertyCollection properties)
+		public MapObject(string name, string type, Rectangle location, List<Point> linePoints, List<Point> polyPoints, PropertyCollection properties)
 		{
 			Name = name;
 			Type = type;

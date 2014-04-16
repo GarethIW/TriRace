@@ -23,6 +23,7 @@ namespace TiledLib
         public float RotationTarget;
         public float Zoom = 1f;
 
+        public Matrix TrackMatrix;
         public Matrix CameraMatrix;
 
         float Speed = 0.2f;
@@ -81,10 +82,15 @@ namespace TiledLib
             // Move camera toward target
             Position = Vector2.Lerp(Position, Target, Speed);
 
-            CameraMatrix = Matrix.CreateTranslation(-Position.X + shakeOffset.X, -Position.Y + shakeOffset.Y, 0)*
+            TrackMatrix = Matrix.CreateTranslation(-Position.X + shakeOffset.X, -Position.Y + shakeOffset.Y, 0)*
                            Matrix.CreateScale(Zoom)*
                            Matrix.CreateRotationZ(Rotation);// * 
                            //Matrix.CreateTranslation(Width / 2f, Height / 2f, 0);
+
+            CameraMatrix = Matrix.CreateTranslation(-Position.X + shakeOffset.X, -Position.Y + shakeOffset.Y, 0) *
+                           Matrix.CreateScale(Zoom) * 
+                           Matrix.CreateRotationZ(Rotation) * 
+                           Matrix.CreateTranslation(Width / 2f, Height / 2f, 0);
         }
 
         public void Shake(double time, float amount)

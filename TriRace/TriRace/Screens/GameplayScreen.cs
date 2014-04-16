@@ -36,7 +36,7 @@ namespace TriRace.Screens
 
         private RasterizerState rastState;
 
-        private Vector2 Position;
+        private Racer racer;
 
         public GameplayScreen()
         {
@@ -50,19 +50,25 @@ namespace TriRace.Screens
 
             map = content.Load<Map>("map");
 
+            TrackGenerator.Generate(map);
+
             var spawn = ((MapObjectLayer)map.GetLayer("Spawn")).Objects[0];
-            Position = new Vector2(spawn.Location.Center.X, spawn.Location.Center.Y) * 0.1f;
+            racer = new Racer(content.Load<Texture2D>("racer"), new Rectangle(0, 0, 20, 20), new Vector2(0, 0));  
+            racer.Position = new Vector2(spawn.Location.Center.X, spawn.Location.Center.Y);
+            racer.Rotation = float.Parse(spawn.Properties["rot"]);
 
             var track = (MapObjectLayer)map.GetLayer("Tris");
-
-            //tris.Add(new TrackTri(new Point(0,0), new Point(0,0), new Point(1,1), new Point(-1,2)));
 
             foreach(MapObject o in track.Objects.Where(ob=>ob.PolyPoints!=null && ob.PolyPoints.Count==3))
                 tris.Add(new TrackTri(o.PolyPoints[0], o.PolyPoints[1], o.PolyPoints[2]));
 
             
-            viewMatrix = Matrix.CreateLookAt(new Vector3(0, 0, -40f), new Vector3(0, 0, 0f), Vector3.Down);
-            projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, ScreenManager.Game.GraphicsDevice.Viewport.AspectRatio, 0.1f, 200f);
+            //projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.Pi, ScreenManager.Game.GraphicsDevice.Viewport.AspectRatio, 0.1f, 200f);
+            Vector2 center;
+            center.X = ScreenManager.Game.GraphicsDevice.Viewport.Width * 0.5f;
+            center.Y = ScreenManager.Game.GraphicsDevice.Viewport.Height * 0.5f;
+            viewMatrix = Matrix.CreateLookAt(new Vector3(center, -0.1f), new Vector3(center, 10f), new Vector3(0, -1, 0));
+            projectionMatrix = Matrix.CreatePerspective(center.X * 2, center.Y * 2, 0.1f, 100f);
 
             drawEffect = new BasicEffect(ScreenManager.Game.GraphicsDevice) {VertexColorEnabled = true, };
             rastState = new RasterizerState()
@@ -72,7 +78,7 @@ namespace TriRace.Screens
 
             camera = new Camera(ScreenManager.Game.RenderWidth, ScreenManager.Game.RenderHeight, map);
 
-            camera.Zoom = 1f;
+            camera.Zoom = 1.5f;
 
             particleController.LoadContent(content);
 
@@ -81,7 +87,11 @@ namespace TriRace.Screens
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            camera.Target = Position;
+            racer.Update(gameTime, map);
+
+            foreach(var t in tris) t.Update(new Vector3(racer.Position.X,racer.Position.Y,0f));
+
+            camera.Target = racer.Position;
 
             worldMatrix = camera.CameraMatrix; //Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up) * Matrix.CreateScale(1f) * Matrix.CreateTranslation(new Vector3(-20f, -20f, 0f));
 
@@ -98,10 +108,10 @@ namespace TriRace.Screens
 
         public override void HandleInput(InputState input)
         {
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Up)) Position.Y -= 1f;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Down)) Position.Y += 1f;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) Position.X -= 1f;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) Position.X += 1f;
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Up)) racer.Boost();
+            //if (input.CurrentKeyboardState.IsKeyDown(Keys.Down)) racer.Position.Y += 0.1f;
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) racer.Rotation -= 0.05f;
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) racer.Rotation += 0.05f;
 
             base.HandleInput(input);
         }
@@ -118,12 +128,12 @@ namespace TriRace.Screens
             Vertices.Clear();
             Indexes.Clear();
 
-            for(int tri=0;tri<tris.Count;tri++)
+            for (int tri = 0; tri < tris.Count; tri++)
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    Vertices.Add(new VertexPositionNormalColor(tris[tri].Points[i], new Vector3(0f,0f,-1f), tris[tri].Tint));
-                    Indexes.Add((short)((tri*3) + i));
+                    Vertices.Add(new VertexPositionNormalColor(tris[tri].Points[i], new Vector3(0f, 0f, -1f), tris[tri].Tint * tris[tri].Alpha));
+                    Indexes.Add((short)((tri * 3) + i));
                 }
             }
 
@@ -136,14 +146,20 @@ namespace TriRace.Screens
                 ScreenManager.Game.GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalColor>(PrimitiveType.TriangleList, VertexArray, 0, VertexArray.Length, IndexArray, 0, VertexArray.Length / 3);
             }
 
-            //sb.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, camera.CameraMatrix);
-          
-            //sb.End();
+            particleController.Draw(sb, camera, 0);
+
+            sb.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.CameraMatrix);
+            racer.Draw(sb);
+            sb.End();
 
             //particleController.Draw(sb, camera, 1);
 
             //sb.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null);
             //sb.End();
+
+            sb.Begin();
+            sb.DrawString(ScreenManager.Font, racer.Position.ToString(), Vector2.One * 10f, Color.White);
+            sb.End();
 
             ScreenManager.FadeBackBufferToBlack(1f - TransitionAlpha);
 

@@ -9,41 +9,40 @@ using TimersAndTweens;
 
 namespace TriRace.Entities
 {
-    class Hero : Entity
+    class Racer : Entity
     {
         public const int MAX_LIFE = 1000;
 
         public int Life = MAX_LIFE;
-        public int FaceDir = 1;
+        public float Rotation = 0f;
 
         private const float GRAVITY = 0.03f;
 
         private SpriteAnim _idleAnim;
-        private SpriteAnim _runAnim;
 
         private Color _tint = Color.White;
 
-        public Hero(Texture2D spritesheet, Rectangle hitbox, Vector2 hitboxoffset) 
+        public Racer(Texture2D spritesheet, Rectangle hitbox, Vector2 hitboxoffset) 
             : base(spritesheet, hitbox, hitboxoffset)
         {
-            _idleAnim = new SpriteAnim(spritesheet, 0, 1, 16,16,0, new Vector2(8f,16f));
-            _runAnim = new SpriteAnim(spritesheet, 1, 7, 16, 16, 60, new Vector2(8f,16f));
-            _runAnim.Play();
+            _idleAnim = new SpriteAnim(spritesheet, 0, 1, 41,41,0, new Vector2(20f,20f));
+
+            Speed = Vector2.Zero;
         }
 
         public override void Update(GameTime gameTime, Map gameMap)
         {
-            Speed.Y += GRAVITY;
+            // inertia
+            Speed *= 0.99f;
 
-            Speed.X = FaceDir;
+            Position += Speed;
 
             _idleAnim.Update(gameTime);
-            _runAnim.Update(gameTime);
 
             Life--;
             if (Life <= 0) Active = false;
 
-            CheckMapCollisions(gameMap);
+            //CheckMapCollisions(gameMap);
 
             _tint = Color.White;
 
@@ -53,7 +52,7 @@ namespace TriRace.Entities
         public override void OnCollision(Entity collided, Rectangle intersect)
         {
             // Collides with another Hero
-            if (collided.GetType() == typeof (Hero)) _tint = Color.Red;
+            if (collided.GetType() == typeof(Racer)) _tint = Color.Red;
                 
 
             base.OnCollision(collided, intersect);
@@ -77,7 +76,6 @@ namespace TriRace.Entities
                     if (coll.HasValue && coll.Value)
                     {
                         Speed.X = 0;
-                        FaceDir = 1;
                     }
                 }
 
@@ -89,15 +87,35 @@ namespace TriRace.Entities
                     if (coll.HasValue && coll.Value)
                     {
                         Speed.X = 0;
-                        FaceDir = -1;
                     }
                 }
+        }
+
+        public void Boost()
+        {
+            Vector2 thrust = Helper.AngleToVector(Rotation, 0.04f);
+            //thrust.Normalize();
+
+            float maxS = 10f;
+            Vector2 maxSpeed = new Vector2(1f, 1f);
+            maxSpeed.Normalize();
+            maxSpeed *= maxS;
+
+            Speed = Vector2.Clamp(Speed+thrust, -maxSpeed, maxSpeed);
+            ParticleController.Instance.Add(Position,
+                                            Helper.AngleToVector((Rotation + Helper.RandomFloat(-0.1f,0.1f))+MathHelper.Pi, Helper.RandomFloat(0.2f,2f)),
+                                            0, Helper.RandomFloat(500,2000), 500,
+                                            false, false, 
+                                            new Rectangle(0,0,5,5),
+                                            Color.Orange,
+                                            ParticleFunctions.FadeInOut,
+                                            1f,0f,0, ParticleBlend.Alpha);
         }
 
         public override void Draw(SpriteBatch sb)
         {
             //_idleAnim.Draw(sb, Position);
-            _runAnim.Draw(sb,Position,FaceDir==-1?SpriteEffects.FlipHorizontally:SpriteEffects.None, 1f, 0f, _tint);
+            _idleAnim.Draw(sb,Position,SpriteEffects.None, 1f, Rotation, _tint);
             base.Draw(sb);
         }
 

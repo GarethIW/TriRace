@@ -75,7 +75,7 @@
     <Compile Include="AudioController.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityPool.cs" />
-    <Compile Include="Entities\Hero.cs" />
+    <Compile Include="Entities\Racer.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="ParticleController.cs" />
@@ -84,7 +84,6 @@
     <Compile Include="ScreenManager\GameScreen.cs" />
     <Compile Include="ScreenManager\InputState.cs" />
     <Compile Include="ScreenManager\ScreenManager.cs" />
-    <Compile Include="Screens\ExampleGameplayScreen.cs" />
     <Compile Include="Screens\GameplayScreen.cs" />
     <Compile Include="Screens\LoadingScreen.cs" />
     <Compile Include="Screens\MainMenuScreen.cs" />
@@ -115,6 +114,7 @@
     <Compile Include="SpriteAnim.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="TimerController.cs" />
+    <Compile Include="TrackGenerator.cs" />
     <Compile Include="TrackTri.cs" />
     <Compile Include="Tween.cs" />
     <Compile Include="TweenController.cs" />

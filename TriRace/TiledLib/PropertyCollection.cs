@@ -14,15 +14,15 @@ namespace TiledLib
 			set { values[key] = value; }
 		}
 
-		internal PropertyCollection() { }
+		public PropertyCollection() { }
 
-		internal void Add(string key, string value)
+        public void Add(string key, string value)
 		{
             if (this.Contains(key)) key = key + Guid.NewGuid().ToString();
 			values.Add(key, value);
 		}
 
-		internal void Read(ContentReader reader)
+        public void Read(ContentReader reader)
 		{
 			int count = reader.ReadInt32();
 			for (int i = 0; i < count; i++)

@@ -83,7 +83,7 @@ namespace VoxelGame
             return radians;
         }
 
-        public static Vector2 PointOnCircle(ref Vector2 C, float R, float A)
+        public static Vector2 PointOnCircle(Vector2 C, float R, float A)
         {
             //A = A - 90;
             float endX = (C.X + (R * ((float)Math.Cos((float)A))));

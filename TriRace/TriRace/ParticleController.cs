@@ -62,6 +62,8 @@ namespace TriRace
     {
         const int MAX_PARTICLES = 3000;
 
+        public static ParticleController Instance;
+
         public Particle[] Particles;
         public Random Rand = new Random();
 
@@ -71,6 +73,7 @@ namespace TriRace
 
         public ParticleController()
         {
+            Instance = this;
             Particles = new Particle[MAX_PARTICLES];
         }
 

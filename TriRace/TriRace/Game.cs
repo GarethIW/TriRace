@@ -29,9 +29,9 @@ namespace TriRace
         private TimerController timerController = new TimerController();
         private TweenController tweenController = new TweenController();
 
-        public int RenderWidth = 320;
-        public int RenderHeight = 180;
-        public int DisplayScale = 5;
+        public int RenderWidth = 1280;
+        public int RenderHeight = 1024;
+        public int DisplayScale = 1;
 
         private RenderTarget2D renderTarget;
 
