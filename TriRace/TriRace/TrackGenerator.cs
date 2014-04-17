@@ -82,7 +82,29 @@ namespace TriRace
 
                 List<Point> polyPoints;
 
-                for (float d = -0.1f; d <= 1.1f; d += 0.1f)
+                float up = (float)Math.Atan2(end.Y - start.Y, end.X - start.X) - MathHelper.PiOver2;
+                float down = (float)Math.Atan2(end.Y - start.Y, end.X - start.X) + MathHelper.PiOver2;
+                Vector2 startdownvect = Helper.PointOnCircle(start, 3f, down);
+                Vector2 enddownvect = Helper.PointOnCircle(end, 3f, down);
+                Vector2 startupvect = Helper.PointOnCircle(start, 3f, up);
+                Vector2 endupvect = Helper.PointOnCircle(end, 3f, up);
+                polyPoints = new List<Point>
+                    {
+                        Helper.VtoP(startdownvect),
+                        Helper.VtoP(startupvect),
+                        Helper.VtoP(enddownvect)
+                    };
+                track.Objects.Add(new MapObject("", "", new Rectangle(outerTrack[i].X, outerTrack[i].Y, 0, 0), null, polyPoints, new PropertyCollection()));
+                
+                polyPoints = new List<Point>
+                    {
+                        Helper.VtoP(startupvect),
+                        Helper.VtoP(endupvect),
+                        Helper.VtoP(enddownvect)
+                    };
+                track.Objects.Add(new MapObject("", "", new Rectangle(outerTrack[i].X, outerTrack[i].Y, 0, 0), null, polyPoints, new PropertyCollection()));
+
+                for (float d = 0f; d <1f; d += 0.1f)
                 {
                     Vector2 p1 = Vector2.Lerp(start, end, MathHelper.Clamp(d + Helper.RandomFloat(-0.3f, -0.1f), 0f, 1f));// + new Vector2(Helper.RandomFloat(-triDev, triDev), Helper.RandomFloat(-triDev, triDev));
                     Vector2 p2 = Vector2.Lerp(start, end, MathHelper.Clamp(d + Helper.RandomFloat(0.1f, 0.3f), 0f, 1f));// + new Vector2(Helper.RandomFloat(-triDev, triDev), Helper.RandomFloat(-triDev, triDev));
@@ -113,13 +135,35 @@ namespace TriRace
                         Helper.VtoP(p2),
                         Helper.VtoP(off)
                     };
-                    track.Objects.Add(new MapObject("", "", new Rectangle(outerTrack[i].X, outerTrack[i].Y, 0, 0), null, polyPoints, new PropertyCollection()));
+                    //track.Objects.Add(new MapObject("", "", new Rectangle(outerTrack[i].X, outerTrack[i].Y, 0, 0), null, polyPoints, new PropertyCollection()));
                 }
 
                 start = Helper.PtoV(innerTrack[i]);
                 end = Helper.PtoV(i + 1 < innerTrack.Count ? innerTrack[i + 1] : innerTrack[0]);
 
-                for (float d = -0.1f; d <= 1.1f; d += 0.1f)
+                up = (float)Math.Atan2(end.Y - start.Y, end.X - start.X) - MathHelper.PiOver2;
+                down = (float)Math.Atan2(end.Y - start.Y, end.X - start.X) + MathHelper.PiOver2;
+                startdownvect = Helper.PointOnCircle(start, 3f, down);
+                enddownvect = Helper.PointOnCircle(end, 3f, down);
+                startupvect = Helper.PointOnCircle(start, 3f, up);
+                endupvect = Helper.PointOnCircle(end, 3f, up);
+                polyPoints = new List<Point>
+                    {
+                        Helper.VtoP(startdownvect),
+                        Helper.VtoP(startupvect),
+                        Helper.VtoP(enddownvect)
+                    };
+                track.Objects.Add(new MapObject("", "", new Rectangle(innerTrack[i].X, innerTrack[i].Y, 0, 0), null, polyPoints, new PropertyCollection()));
+
+                polyPoints = new List<Point>
+                    {
+                        Helper.VtoP(startupvect),
+                        Helper.VtoP(endupvect),
+                        Helper.VtoP(enddownvect)
+                    };
+                track.Objects.Add(new MapObject("", "", new Rectangle(innerTrack[i].X, innerTrack[i].Y, 0, 0), null, polyPoints, new PropertyCollection()));
+
+                for (float d = 0f; d < 1f; d += 0.1f)
                 {
                     Vector2 p1 = Vector2.Lerp(start, end, MathHelper.Clamp(d + Helper.RandomFloat(-0.3f, -0.1f), 0f, 1f));// + new Vector2(Helper.RandomFloat(-triDev, triDev), Helper.RandomFloat(-triDev, triDev));
                     Vector2 p2 = Vector2.Lerp(start, end, MathHelper.Clamp(d + Helper.RandomFloat(0.1f, 0.3f), 0f, 1f));// + new Vector2(Helper.RandomFloat(-triDev, triDev), Helper.RandomFloat(-triDev, triDev));
@@ -150,7 +194,7 @@ namespace TriRace
                         Helper.VtoP(p2),
                         Helper.VtoP(off)
                     };
-                    track.Objects.Add(new MapObject("", "", new Rectangle(innerTrack[i].X, innerTrack[i].Y, 0, 0), null, polyPoints, new PropertyCollection()));
+                    //track.Objects.Add(new MapObject("", "", new Rectangle(innerTrack[i].X, innerTrack[i].Y, 0, 0), null, polyPoints, new PropertyCollection()));
                 }
 
                 //polyPoints = new List<Point>
