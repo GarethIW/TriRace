@@ -30,23 +30,51 @@ namespace TriRace.Entities
             Speed = Vector2.Zero;
         }
 
-        public override void Update(GameTime gameTime, Map gameMap)
+        public void Update(GameTime gameTime, Map gameMap, List<TrackTri> tris)
         {
             // inertia
             Speed *= 0.99f;
 
-            Position += Speed;
-
             _idleAnim.Update(gameTime);
 
-            Life--;
+            //Life--;
             if (Life <= 0) Active = false;
 
             //CheckMapCollisions(gameMap);
 
+            CheckTriCols(tris);
+
             _tint = Color.White;
 
             base.Update(gameTime, gameMap);
+        }
+
+        private void CheckTriCols(List<TrackTri> tris)
+        {
+            foreach (var t in tris)
+                if (Vector2.Distance(t.Center, Position + Speed) < 150f &&
+                    Helper.IsPointInShape(Position + Speed, t.CollPoints))
+                {
+                    float a = Helper.V2ToAngle(Speed);
+                    for (float ta = 0f; ta < MathHelper.PiOver2; ta += 0.05f)
+                    {
+                        Vector2 testACW = Helper.PointOnCircle(Position, Speed.Length(), a - ta);
+                        Vector2 testCW = Helper.PointOnCircle(Position, Speed.Length(), a + ta);
+
+                        if (!Helper.IsPointInShape(testACW, t.CollPoints))
+                        {
+                            Speed = Helper.AngleToVector(a - ta- MathHelper.PiOver4, Speed.Length());
+                            break;
+                        }
+
+                        if (!Helper.IsPointInShape(testCW, t.CollPoints))
+                        {
+                            Speed = Helper.AngleToVector(a + ta + MathHelper.PiOver4, Speed.Length());
+                            break;
+                        }
+                    }
+                }
+
         }
 
         public override void OnCollision(Entity collided, Rectangle intersect)
@@ -103,19 +131,19 @@ namespace TriRace.Entities
 
             Speed = Vector2.Clamp(Speed+thrust, -maxSpeed, maxSpeed);
             ParticleController.Instance.Add(Position,
-                                            Helper.AngleToVector((Rotation + Helper.RandomFloat(-0.1f,0.1f))+MathHelper.Pi, Helper.RandomFloat(0.2f,2f)),
+                                            Helper.AngleToVector((Rotation + Helper.RandomFloat(-0.3f,0.3f))+MathHelper.Pi, Helper.RandomFloat(0.1f,1.5f)),
                                             0, Helper.RandomFloat(500,2000), 500,
-                                            false, false, 
-                                            new Rectangle(0,0,5,5),
+                                            false, true, 
+                                            new Rectangle(0,0,4,4),
                                             Color.Orange,
                                             ParticleFunctions.FadeInOut,
-                                            1f,0f,0, ParticleBlend.Alpha);
+                                            1f,0f,Helper.RandomFloat(-0.1f,0.1f), 0, ParticleBlend.Alpha);
         }
 
         public override void Draw(SpriteBatch sb)
         {
             //_idleAnim.Draw(sb, Position);
-            _idleAnim.Draw(sb,Position,SpriteEffects.None, 1f, Rotation, _tint);
+            _idleAnim.Draw(sb,Position,SpriteEffects.None, 0.5f, Rotation, _tint);
             base.Draw(sb);
         }
 

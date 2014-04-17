@@ -53,9 +53,10 @@ namespace TriRace.Screens
             TrackGenerator.Generate(map);
 
             var spawn = ((MapObjectLayer)map.GetLayer("Spawn")).Objects[0];
-            racer = new Racer(content.Load<Texture2D>("racer"), new Rectangle(0, 0, 20, 20), new Vector2(0, 0));  
+            racer = new Racer(content.Load<Texture2D>("racer"), new Rectangle(0, 0, 10, 10), new Vector2(0, 0));  
             racer.Position = new Vector2(spawn.Location.Center.X, spawn.Location.Center.Y);
             racer.Rotation = float.Parse(spawn.Properties["rot"]);
+            racer.Active = true;
 
             var track = (MapObjectLayer)map.GetLayer("Tris");
 
@@ -78,7 +79,7 @@ namespace TriRace.Screens
 
             camera = new Camera(ScreenManager.Game.RenderWidth, ScreenManager.Game.RenderHeight, map);
 
-            camera.Zoom = 1.5f;
+            
 
             particleController.LoadContent(content);
 
@@ -87,7 +88,8 @@ namespace TriRace.Screens
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            racer.Update(gameTime, map);
+            racer.Update(gameTime, map, tris);
+            camera.Zoom = 2f - (racer.Speed.Length()*0.2f);
 
             foreach(var t in tris) t.Update(new Vector3(racer.Position.X,racer.Position.Y,0f));
 
@@ -101,7 +103,7 @@ namespace TriRace.Screens
 
             camera.Update(gameTime);
            
-            particleController.Update(gameTime, map);
+            particleController.Update(gameTime, map, tris);
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }

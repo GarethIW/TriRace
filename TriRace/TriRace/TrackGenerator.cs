@@ -82,10 +82,10 @@ namespace TriRace
 
                 List<Point> polyPoints;
 
-                for (float d = 0f; d < 1f; d += 0.1f)
+                for (float d = -0.1f; d <= 1.1f; d += 0.1f)
                 {
-                    Vector2 p1 = Vector2.Lerp(start, end, MathHelper.Clamp(d + Helper.RandomFloat(-0.3f, -0.1f), 0f, 1f)) + new Vector2(Helper.RandomFloat(-triDev, triDev), Helper.RandomFloat(-triDev, triDev));
-                    Vector2 p2 = Vector2.Lerp(start, end, MathHelper.Clamp(d + Helper.RandomFloat(0.1f,0.3f), 0f, 1f)) + new Vector2(Helper.RandomFloat(-triDev, triDev), Helper.RandomFloat(-triDev, triDev));
+                    Vector2 p1 = Vector2.Lerp(start, end, MathHelper.Clamp(d + Helper.RandomFloat(-0.3f, -0.1f), 0f, 1f));// + new Vector2(Helper.RandomFloat(-triDev, triDev), Helper.RandomFloat(-triDev, triDev));
+                    Vector2 p2 = Vector2.Lerp(start, end, MathHelper.Clamp(d + Helper.RandomFloat(0.1f, 0.3f), 0f, 1f));// + new Vector2(Helper.RandomFloat(-triDev, triDev), Helper.RandomFloat(-triDev, triDev));
                     float a = (float) Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) + Helper.RandomFloat((-MathHelper.PiOver2-MathHelper.PiOver4),-MathHelper.PiOver4);
                     Vector2 off = Helper.PointOnCircle(Vector2.Lerp(p1, p2, 0.5f), Helper.RandomFloat(10f, 60f), a);
                     off += new Vector2(Helper.RandomFloat(-triDev*5f, triDev*5f), Helper.RandomFloat(-triDev*10f, triDev*10f));
@@ -119,10 +119,10 @@ namespace TriRace
                 start = Helper.PtoV(innerTrack[i]);
                 end = Helper.PtoV(i + 1 < innerTrack.Count ? innerTrack[i + 1] : innerTrack[0]);
 
-                for (float d = 0f; d < 1f; d += 0.1f)
+                for (float d = -0.1f; d <= 1.1f; d += 0.1f)
                 {
-                    Vector2 p1 = Vector2.Lerp(start, end, MathHelper.Clamp(d + Helper.RandomFloat(-0.3f, -0.1f), 0f, 1f)) + new Vector2(Helper.RandomFloat(-triDev, triDev), Helper.RandomFloat(-triDev, triDev));
-                    Vector2 p2 = Vector2.Lerp(start, end, MathHelper.Clamp(d + Helper.RandomFloat(0.1f, 0.3f), 0f, 1f)) + new Vector2(Helper.RandomFloat(-triDev, triDev), Helper.RandomFloat(-triDev, triDev));
+                    Vector2 p1 = Vector2.Lerp(start, end, MathHelper.Clamp(d + Helper.RandomFloat(-0.3f, -0.1f), 0f, 1f));// + new Vector2(Helper.RandomFloat(-triDev, triDev), Helper.RandomFloat(-triDev, triDev));
+                    Vector2 p2 = Vector2.Lerp(start, end, MathHelper.Clamp(d + Helper.RandomFloat(0.1f, 0.3f), 0f, 1f));// + new Vector2(Helper.RandomFloat(-triDev, triDev), Helper.RandomFloat(-triDev, triDev));
                     float a = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) + Helper.RandomFloat(MathHelper.PiOver4, MathHelper.PiOver4+MathHelper.PiOver4);
                     Vector2 off = Helper.PointOnCircle(Vector2.Lerp(p1, p2, 0.5f), Helper.RandomFloat(10f, 60f), a);
                     off += new Vector2(Helper.RandomFloat(-triDev * 5f, triDev * 5f), Helper.RandomFloat(-triDev * 10f, triDev * 10f));
@@ -153,14 +153,14 @@ namespace TriRace
                     track.Objects.Add(new MapObject("", "", new Rectangle(innerTrack[i].X, innerTrack[i].Y, 0, 0), null, polyPoints, new PropertyCollection()));
                 }
 
-                polyPoints = new List<Point>
-                {
-                    trackLine[i],
-                    trackLine[i]+new Point(2,0),
-                    i+1<trackLine.Count?trackLine[i+1]:trackLine[0]
-                };
+                //polyPoints = new List<Point>
+                //{
+                //    trackLine[i],
+                //    trackLine[i]+new Point(2,0),
+                //    i+1<trackLine.Count?trackLine[i+1]:trackLine[0]
+                //};
 
-                track.Objects.Add(new MapObject("", "", new Rectangle(trackLine[i].X, trackLine[i].Y, 0, 0), null, polyPoints, new PropertyCollection()));
+                //track.Objects.Add(new MapObject("", "", new Rectangle(trackLine[i].X, trackLine[i].Y, 0, 0), null, polyPoints, new PropertyCollection()));
 
                 //polyPoints = new List<Point>
                 //{

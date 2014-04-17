@@ -52,6 +52,7 @@ namespace TriRace
 
         public float Scale;
         public float Rotation;
+        public float RotationSpeed;
         public Color Color;
         public Rectangle SourceRect;
 
@@ -95,7 +96,7 @@ namespace TriRace
 
         }
 
-        public void Update(GameTime gameTime, Map gameMap)
+        public void Update(GameTime gameTime, Map gameMap, List<TrackTri> tris)
         {
             foreach (Particle p in Particles.Where(p => p.State != ParticleState.Done))
             {
@@ -105,13 +106,15 @@ namespace TriRace
 
                 if (p.CanCollide && gameMap!=null)
                 {
-                    if (gameMap.CheckCollision(p.Position + new Vector2(p.Velocity.X, 0)).GetValueOrDefault())
+                    if (gameMap.CheckCollision(p.Position + new Vector2(p.Velocity.X, 0)).GetValueOrDefault()
+                        || CheckTriCols(p.Position + new Vector2(p.Velocity.X, 0), tris))
                     {
                         p.Velocity.X = -(p.Velocity.X*(0.1f + Helper.RandomFloat(0.4f)));
                         p.Velocity.Y *= 0.9f;
                     }
 
-                    if (gameMap.CheckCollision(p.Position + new Vector2(0, p.Velocity.Y)).GetValueOrDefault())
+                    if (gameMap.CheckCollision(p.Position + new Vector2(0, p.Velocity.Y)).GetValueOrDefault()
+                        || CheckTriCols(p.Position + new Vector2(0, p.Velocity.Y), tris))
                     {
                         p.Velocity.Y = -(p.Velocity.Y*(0.1f + Helper.RandomFloat(0.4f)));
                         p.Velocity.X *= 0.9f;
@@ -119,6 +122,7 @@ namespace TriRace
                 }
 
                 p.Position += p.Velocity;
+                p.Rotation += p.RotationSpeed;
 
                 switch (p.State)
                 {
@@ -154,6 +158,14 @@ namespace TriRace
 
                 p.ParticleFunction(p);
             }
+        }
+
+        private bool CheckTriCols(Vector2 pos, List<TrackTri> tris)
+        {
+            foreach(var t in tris)
+                if (Vector2.Distance(t.Center, pos)<150f && Helper.IsPointInShape(pos, t.CollPoints)) return true;
+
+            return false;
         }
 
         public void Draw(SpriteBatch sb)
@@ -210,7 +222,7 @@ namespace TriRace
         }
 
 
-        public void Add(Vector2 spawnPos, Vector2 velocity, double attackTime, double lifeTime, double decayTime, bool affectedbygravity, bool canCollide, Rectangle sourcerect, Color col, Action<Particle> particleFunc, float startScale, float startRot, int depth, ParticleBlend blend)
+        public void Add(Vector2 spawnPos, Vector2 velocity, double attackTime, double lifeTime, double decayTime, bool affectedbygravity, bool canCollide, Rectangle sourcerect, Color col, Action<Particle> particleFunc, float startScale, float startRot, float rotSpeed, int depth, ParticleBlend blend)
         {
             Particle p = Particles.FirstOrDefault(part => part.State == ParticleState.Done);
             if (p!=null)
@@ -232,6 +244,7 @@ namespace TriRace
                 p.State = ParticleState.Attack;
                 p.Scale = startScale;
                 p.Rotation = startRot;
+                p.RotationSpeed = rotSpeed;
                 p.Color = col;
                 p.ParticleFunction = particleFunc;
                 p.ParticleFunction(p);

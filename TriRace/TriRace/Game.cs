@@ -30,7 +30,7 @@ namespace TriRace
         private TweenController tweenController = new TweenController();
 
         public int RenderWidth = 1280;
-        public int RenderHeight = 1024;
+        public int RenderHeight = 720;
         public int DisplayScale = 1;
 
         private RenderTarget2D renderTarget;
